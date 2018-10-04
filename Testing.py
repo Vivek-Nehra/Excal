@@ -25,7 +25,7 @@ sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
 sobel = np.array(sobel,dtype=np.uint8)
 print(sobel.shape,sobel.dtype)
 
-lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,100,60).tolist()
+lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,100,1000).tolist()
 print(len(lines))
 val = 0
 if lines is not None:
