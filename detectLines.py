@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-
+from rectangle import edge_detect
 
 def deletelines(lines):
     for line in lines:
@@ -10,7 +10,13 @@ def deletelines(lines):
                 del lines[index]
     return lines
 
-def detect(img,sobel):
+def detect(img):
+    canny = edge_detect(img)
+    sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
+    sobel = cv2.dilate(sobel,np.ones([3,3]),iterations=1)
+    sobel = np.array(sobel,dtype=np.uint8)
+    # print(sobel.shape,sobel.dtype)
+
     row,col = sobel.shape
 
     lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,col/2,30)
@@ -24,9 +30,9 @@ def detect(img,sobel):
 
         print(len(lines))
         for line in lines:
-            # if abs(line[0][1] - line[0][3]) < 10:
-            val +=1
-            cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),5)
+            if abs(line[0][1] - line[0][3]) < row/2:
+            	val +=1
+            	cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),5)
         print(val)
 
         return lines

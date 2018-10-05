@@ -1,20 +1,47 @@
 import cv2
 import numpy as np
 
-def draw(in_im,canny):
 
-	cv2.dilate(canny, np.ones((3, 3), np.uint8), iterations=1)
 
-	img, c, h = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+def edge_detect(img):
+	cv2.GaussianBlur(img,(15,15),1)
+	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+	canny = cv2.Canny(img,100,200)
+	cv2.GaussianBlur(canny,(15,15),1)
+	# print(canny.shape,canny.dtype)
+	return canny
+
+
+def draw(in_im):
+	canny = edge_detect(in_im)
+	cv2.GaussianBlur(canny,(5,5),True)
+	cv2.medianBlur(canny,3)
+	canny=cv2.dilate(canny, np.ones((3, 3), np.uint8), iterations=1)
+
+	_, c, h = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 	cMax = max(c, key = cv2.contourArea)
 	# print(cMax)
 
+	epsilon = 0.1*cv2.arcLength(cMax,True)
+	approx = cv2.approxPolyDP(cMax,epsilon,True)
+	
 	x,y,w,h = cv2.boundingRect(cMax)
 	cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
+	#cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
+	
+	if len(approx)==4:
+		print ("Table Detected")
+		for i in approx :
+			cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)
+		roi = in_im[y:y+h,x:x+w]
+	else:
+		print("Returning original Image")
+		roi = in_im	
 
-	roi = in_im[y:y+h,x:x+w]
+	cv2.imshow("Input",in_im)
+	cv2.imshow("Canny",canny)
+	cv2.waitKey(0)
 	return roi
 
 # extLeft = tuple(cMax[cMax[:, :, 0].argmin()][0])

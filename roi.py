@@ -6,6 +6,7 @@ def create_roi(img,lines):
             break
         roi = img[line[0][1]:lines[index+1][0][1],:,:]
         row,col,_ = roi.shape
-        if row > 20:
+        #print(row)
+        if row > 15:
             cv2.imshow("ROI",roi)
             cv2.waitKey(0)
