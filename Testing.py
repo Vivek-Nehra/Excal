@@ -5,19 +5,17 @@ import roi
 import rectangle
 
 
-img =  cv2.imread("co5.png")
+img =  cv2.imread(input("Enter the name of the image : "))
 
-#lines = detectLines.detect(img)
-#roi.create_roi(img,lines)
+# lines = detectLines.detect(img)
+# roi.create_roi(img,lines)
 rect_img = rectangle.draw(img)
 lines = detectLines.detect(rect_img)
-#roi.create_roi(rect_img,lines)
+roi.create_row(rect_img,lines)
 
 
 cv2.imshow("Rectangle",rect_img)
 cv2.imshow("Original",img)
-# cv2.imshow("Sobel",sobel)
-# cv2.imshow("Canny",canny)
 
 
 cv2.waitKey(0)
