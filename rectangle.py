@@ -23,19 +23,21 @@ def draw(in_im):
 	cMax = max(c, key = cv2.contourArea)
 	# print(cMax)
 
-	epsilon = 0.1*cv2.arcLength(cMax,True)
+	epsilon = 0.05*cv2.arcLength(cMax,True)
 	approx = cv2.approxPolyDP(cMax,epsilon,True).tolist()
 	approx.sort(key = lambda x : sqrt(x[0][0]**2 + x[0][1]**2))
 
 	x,y,w,h = cv2.boundingRect(cMax)
 	cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	#cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
+	cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
 	print(approx)
+
+	for i in approx :
+		cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)
+
 	if len(approx)==4:
 		print ("Table Detected")
-		for i in approx :
-			cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)
 
 		pts1 = np.float32([[i[0] for i in approx]])
 		pts2 = np.float32([[0,0],[0,h],[w,0],[w,h]])
