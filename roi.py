@@ -25,7 +25,7 @@ def create_row(img,lines):
             # roi = img[line[0][1]:row,:,:]
             break
         else:
-            roi = img[max(line[0][1],line[0][3]):max(lines[index+1][0][1],lines[index+1][0][3]),:,:]
+            roi = img[min(line[0][1],line[0][3]):max(lines[index+1][0][1],lines[index+1][0][3]),:,:]
 
         roi_row,roi_col,_ = roi.shape
         #print(roi_row)
