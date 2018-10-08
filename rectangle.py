@@ -3,13 +3,21 @@ import numpy as np
 from math import sqrt
 
 
-def edge_detect(img):
-	cv2.GaussianBlur(img,(5,5),1)
-	gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-	canny = cv2.Canny(img,100,200)
+def edge_detect(in_im):
+	cv2.GaussianBlur(in_im,(5,5),1)
+	gray = cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY)
+	canny = cv2.Canny(in_im,100,200)
 	cv2.GaussianBlur(canny,(5,5),1)
 	# print(canny.shape,canny.dtype)
 	return canny
+
+
+def resize(in_im):
+	row,col = in_im.shape[:-1]
+	if row > 2000 or col > 2000:
+		in_im = cv2.resize(in_im,(int(col/2),int(row/2)),interpolation = cv2.INTER_CUBIC)
+
+	return in_im
 
 
 def draw(in_im):
@@ -17,6 +25,7 @@ def draw(in_im):
 	canny = edge_detect(in_im)
 	cv2.GaussianBlur(canny,(5,5),True)
 	cv2.medianBlur(canny,3)
+	# th2 = cv2.adaptiveThreshold(cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY),255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
 	canny=cv2.dilate(canny, np.ones((3, 3), np.uint8), iterations=1)
 
 	_, c, h = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
@@ -30,7 +39,6 @@ def draw(in_im):
 	x,y,w,h = cv2.boundingRect(cMax)
 	cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	# cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
 	# print(approx)
 
 	for i in approx :
@@ -53,9 +61,11 @@ def draw(in_im):
 			roi = cv2.warpPerspective(in_im,M,(w,h))
 
 	else:
-		print("Returning original Image")
+		print("Returning original Image, Points : ",len(approx))
+		cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
 		roi = copy
-	#
+
+	# ddcv2.imshow("Thresh",th2)
 	# cv2.imshow("Input",in_im)
 	# cv2.imshow("Canny",canny)
 	cv2.waitKey(0)

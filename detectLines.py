@@ -1,21 +1,31 @@
 import cv2
 import numpy as np
 from rectangle import edge_detect
+import math
 
 def deletelines(lines):
     for line in lines:
         for index,line2 in enumerate(lines):
-            if abs(line[0][1] - line2[0][1]) < 10:
+            if abs(line[0][1] - line2[0][1]) < 10 or slope(line) > 10:
                 #print (abs(line[0][1] - line2[0][1]))
                 del lines[index]
     return lines
+
+
+
+def slope(line):
+    if line[0][0] == line[0][2]:
+        return 90
+    return math.degrees(math.atan(abs(line[0][1] - line[0][3])/abs(line[0][0] - line[0][2])))
+
+
 
 def detect(img):
     canny = edge_detect(img)
     sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
     row,col = sobel.shape
 
-    sobel = cv2.erode(sobel,np.ones([1,int(col/10)]),iterations=1)
+    sobel = cv2.erode(sobel,np.ones([1,int(col/20)]),iterations=1)
     sobel = cv2.dilate(sobel,np.ones([1,int(col/2)]),iterations=1)
     sobel = np.array(sobel,dtype=np.uint8)
     # print(sobel.shape,sobel.dtype)
@@ -26,17 +36,16 @@ def detect(img):
     if lines is not None:
         lines = lines.tolist()
         lines.sort(key= lambda x : x[0][1])
-        #print(lines)
+        print(len(lines))
         lines = deletelines(lines)
 
-        print(len(lines))
         for line in lines:
 
             if line[0][0] == line[0][2]:
-                slope = 90
+                theta = 90
             else :
-                slope = abs(line[0][1] - line[0][3])/abs(line[0][0] - line[0][2])
-            if slope < 10:
+                theta = slope(line)
+            if theta < 10:
                 cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
                 val+=1
         print(val)
