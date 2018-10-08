@@ -13,12 +13,12 @@ def deletelines(lines):
 def detect(img):
     canny = edge_detect(img)
     sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
-    sobel = cv2.dilate(sobel,np.ones([3,3]),iterations=1)
-    # sobel = cv2.erode(sobel,np.ones([3,3]),iterations=1)
+    row,col = sobel.shape
+
+    sobel = cv2.erode(sobel,np.ones([1,int(col/10)]),iterations=1)
+    sobel = cv2.dilate(sobel,np.ones([1,int(col/2)]),iterations=1)
     sobel = np.array(sobel,dtype=np.uint8)
     # print(sobel.shape,sobel.dtype)
-
-    row,col = sobel.shape
 
     lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,col/2,30)
     # print("Initial lines : " , len(lines))
