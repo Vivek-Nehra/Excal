@@ -31,9 +31,14 @@ def detect(img):
 
         print(len(lines))
         for line in lines:
-            if abs(line[0][1] - line[0][3]) < row/2:
-            	val +=1
-            	cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+
+            if line[0][0] == line[0][2]:
+                slope = 90
+            else :
+                slope = abs(line[0][1] - line[0][3])/abs(line[0][0] - line[0][2])
+            if slope < 10:
+                cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+                val+=1
         print(val)
 
 

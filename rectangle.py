@@ -30,8 +30,8 @@ def draw(in_im):
 	x,y,w,h = cv2.boundingRect(cMax)
 	cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
-	print(approx)
+	# cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
+	# print(approx)
 
 	for i in approx :
 		cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)
@@ -39,10 +39,18 @@ def draw(in_im):
 	if len(approx)==4:
 		print ("Table Detected")
 
-		pts1 = np.float32([[i[0] for i in approx]])
-		pts2 = np.float32([[0,0],[0,h],[w,0],[w,h]])
-		M = cv2.getPerspectiveTransform(pts1,pts2)
-		roi = cv2.warpPerspective(in_im,M,(w,h))
+		pts1 = np.float32([i[0] for i in approx])
+		# print (pts1)
+		if w>=h:
+			print ("Horizontal")
+			pts2 = np.float32([[0,0],[0,h],[w,0],[w,h]])
+			M = cv2.getPerspectiveTransform(pts1,pts2)
+			roi = cv2.warpPerspective(in_im,M,(w,h))
+		else:
+			print ("Vertical")
+			pts2 = np.float32([[0,0],[w,0],[0,h],[w,h]])
+			M = cv2.getPerspectiveTransform(pts1,pts2)
+			roi = cv2.warpPerspective(in_im,M,(w,h))
 
 	else:
 		print("Returning original Image")
