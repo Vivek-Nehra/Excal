@@ -4,13 +4,32 @@ from rectangle import edge_detect
 import math
 
 def deletelines(lines):
-    for line in lines:
-        for index,line2 in enumerate(lines):
-            if abs(line[0][1] - line2[0][1]) < 10 or slope(line) > 10:
-                #print (abs(line[0][1] - line2[0][1]))
-                del lines[index]
-    return lines
+    n = len(lines)
+    idx= 0
+    while idx < n:
 
+        if slope(lines[idx]) > 10 :
+            del lines[idx]
+            n -= 1
+            continue
+
+        idx2 = 0
+        while idx2 < n:
+            if lines[idx] == lines[idx2]:
+                # print(lines[idx],lines[idx2],"Continuing")
+                idx2 += 1
+                continue
+
+            if abs(lines[idx][0][1] - lines[idx2][0][1]) < 10 :
+                # print ("Deleted")
+                del lines[idx2]
+                n -= 1
+                continue
+
+            idx2 += 1
+        idx += 1
+
+    return lines
 
 
 def slope(line):
@@ -45,9 +64,9 @@ def detect(img):
                 theta = 90
             else :
                 theta = slope(line)
-            print(theta)
+            # print(theta)
             if theta < 10:
-                # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+                cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
                 val+=1
         print(val)
 

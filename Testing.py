@@ -13,9 +13,9 @@ img = rectangle.resize(img)
 # lines = detectLines.detect(img)
 # roi.create_row(img,lines)
 rect_img = rectangle.draw(img)
-lines = detectLines.detect(rect_img)
-# lines2 = vertical.detect(rect_img)
-roi.create_row(rect_img,lines)
+# lines = detectLines.detect(rect_img)
+lines2 = vertical.detect(rect_img)
+# roi.create_row(rect_img,lines)
 
 
 
