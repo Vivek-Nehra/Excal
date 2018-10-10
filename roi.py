@@ -1,5 +1,6 @@
 import cv2
-
+import pytesseract
+import vertical
 
 def row_height(lines):
     avg_distance = 0
@@ -31,5 +32,7 @@ def create_row(img,lines):
         #print(roi_row)
         # if roi_row > 10:
         if roi_row > row_size :
-            cv2.imshow("ROI",roi)
-            cv2.waitKey(0)
+        	# print(pytesseract.image_to_string(in_im))
+        	vertical.detect(roi)
+        	cv2.imshow("ROI",roi)
+        	cv2.waitKey(0)

@@ -37,7 +37,7 @@ def draw(in_im):
 	approx.sort(key = lambda x : sqrt(x[0][0]**2 + x[0][1]**2))
 
 	x,y,w,h = cv2.boundingRect(cMax)
-	cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
+	# cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
 	# print(approx)
 
