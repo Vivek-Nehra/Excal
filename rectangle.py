@@ -3,12 +3,18 @@ import numpy as np
 from math import sqrt
 
 
+def thresh(in_im):
+	cv2.GaussianBlur(in_im,(5,5),1)
+	gray = cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY)
+	thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
+	cv2.GaussianBlur(thresh,(5,5),1)
+	return thresh
+
 def edge_detect(in_im):
 	cv2.GaussianBlur(in_im,(5,5),1)
 	gray = cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY)
 	canny = cv2.Canny(in_im,100,200)
 	cv2.GaussianBlur(canny,(5,5),1)
-	# print(canny.shape,canny.dtype)
 	return canny
 
 
@@ -26,7 +32,7 @@ def draw(in_im):
 	cv2.GaussianBlur(canny,(5,5),True)
 	cv2.medianBlur(canny,3)
 	# th2 = cv2.adaptiveThreshold(cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY),255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
-	canny=cv2.dilate(canny, np.ones((5, 5), np.uint8), iterations=1)
+	canny=cv2.dilate(canny, np.ones((7, 7), np.uint8), iterations=1)
 
 	_, c, h = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 	cMax = max(c, key = cv2.contourArea)
@@ -66,8 +72,7 @@ def draw(in_im):
 		roi = copy
 
 	# ddcv2.imshow("Thresh",th2)
-	# cv2.imshow("Input",in_im)
-	# cv2.imshow("Canny",canny)
+	cv2.imshow("Input",in_im)
 	cv2.waitKey(0)
 	return roi
 

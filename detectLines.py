@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from rectangle import edge_detect
+from rectangle import thresh
 import math
 
 def deletelines(lines):
@@ -40,12 +40,13 @@ def slope(line):
 
 
 def detect(img):
-    canny = edge_detect(img)
+    canny = thresh(img)
     sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
     row,col = sobel.shape
 
-    sobel = cv2.erode(sobel,np.ones([1,int(col/20)]),iterations=1)
+    sobel = cv2.erode(sobel,np.ones([1,int(col/10)]),iterations=1)
     sobel = cv2.dilate(sobel,np.ones([1,int(col/2)]),iterations=1)
+    _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
     sobel = np.array(sobel,dtype=np.uint8)
     # print(sobel.shape,sobel.dtype)
 

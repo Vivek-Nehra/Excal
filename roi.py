@@ -5,15 +5,18 @@ import vertical
 def row_height(lines):
     avg_distance = 0
     count=0
-    for idx,line in enumerate(lines):
-        if idx == len(lines)-1:
-            break
+    if lines is None:
+        return 0
+    else:
+        for idx,line in enumerate(lines):
+            if idx == len(lines)-1:
+                break
 
-        avg_distance +=  max(lines[idx+1][0][1],lines[idx+1][0][3]) - min(line[0][1],line[0][3])
-        count += 1
+            avg_distance +=  max(lines[idx+1][0][1],lines[idx+1][0][3]) - min(line[0][1],line[0][3])
+            count += 1
 
-    avg_distance /= count
-    return int(avg_distance)
+        avg_distance /= count
+        return int(avg_distance)
 
 
 def create_row(img,lines):

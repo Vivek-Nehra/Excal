@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from rectangle import edge_detect
+from rectangle import thresh
 import math
 
 
@@ -42,7 +42,7 @@ def slope(line):
 
 
 def detect(img):
-    canny = edge_detect(img)
+    canny = thresh(img)
 
     sobel = cv2.Sobel(canny,cv2.CV_64F,1,0,ksize=5)
     row,col = sobel.shape
@@ -53,7 +53,7 @@ def detect(img):
     _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
     # print(canny.shape)
 
-    lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,int(0.3*row),30)
+    lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,int(0.5*row),30)
     # print("Initial lines : " , len(lines))
     # val = 0
     if lines is not None:
