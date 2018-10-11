@@ -73,7 +73,7 @@ def draw(in_im):
 
 	# ddcv2.imshow("Thresh",th2)
 	cv2.imshow("Input",in_im)
-	cv2.waitKey(0)
+	# cv2.waitKey(0)
 	return roi
 
 # extLeft = tuple(cMax[cMax[:, :, 0].argmin()][0])

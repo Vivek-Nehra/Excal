@@ -72,8 +72,8 @@ def detect(img):
         print(val)
 
 
-        cv2.imshow("Sobel",sobel)
-        cv2.imshow("Canny",canny)
-        cv2.waitKey(0)
+        # cv2.imshow("Sobel",sobel)
+        # cv2.imshow("Canny",canny)
+        # cv2.waitKey(0)
 
         return lines
