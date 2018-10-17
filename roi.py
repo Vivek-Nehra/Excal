@@ -19,17 +19,17 @@ def row_height(lines):
         return int(avg_distance)
 
 
-def create_row(img,lines):
-    row_size = row_height(lines)
+def create_row(img,horizontal_lines,vertical_lines):
+    row_size = row_height(horizontal_lines)
     print("Row Height : " ,row_size)
     row,col = img.shape[:-1]
 
-    for index,line in enumerate(lines) :
-        if index == len(lines)-1:
+    for index,line in enumerate(horizontal_lines) :
+        if index == len(horizontal_lines)-1:
             # roi = img[line[0][1]:row,:,:]
             break
         else:
-            roi = img[min(line[0][1],line[0][3]):max(lines[index+1][0][1],lines[index+1][0][3]),:,:]
+            roi = img[min(line[0][1],line[0][3]):max(horizontal_lines[index+1][0][1],horizontal_lines[index+1][0][3]),:,:]
 
         roi_row,roi_col,_ = roi.shape
         #print(roi_row)
@@ -37,5 +37,12 @@ def create_row(img,lines):
         # if roi_row > row_size :
         	# print(pytesseract.image_to_string(in_im))
         	# vertical.detect(roi)
-        	cv2.imshow("ROI",roi)
-        	cv2.waitKey(0)
+            cv2.imshow("ROI",roi)
+            cv2.waitKey(0)
+
+            for idx,ver_line in enumerate(vertical_lines):
+                if idx == len(vertical_lines)-1:
+                    break
+                cells = roi[:,ver_line:vertical_lines[idx+1]]
+                cv2.imshow("Cells",cells)
+                cv2.waitKey(0)

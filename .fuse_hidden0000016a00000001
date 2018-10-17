@@ -13,9 +13,9 @@ try:
     # lines = detectLines.detect(img)
     # roi.create_row(img,lines)
     rect_img = rectangle.draw(img)
-    horizontal_lines = detectLines.detect(rect_img)
-    vertical_lines = vertical.detect(rect_img)
-    roi.create_row(rect_img,horizontal_lines,vertical_lines)
+    # lines = detectLines.detect(rect_img)
+    lines2 = vertical.detect(rect_img)
+    # roi.create_row(rect_img,lines)
 
 
 
