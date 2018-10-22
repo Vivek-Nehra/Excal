@@ -25,12 +25,38 @@ def resize(in_im):
 
 	return in_im
 
+def deletepoints(approx,thresh_value):
+	idx= 0
+	n = len(approx)
+	while idx < n:
+		idx2 = 0
+		while idx2 < n:
+			if approx[idx] == approx[idx2]:
+				idx2 += 1
+				continue
+
+			if distance(approx[idx][0],approx[idx2][0]) < thresh_value :
+				# print ("Deleted")
+				del approx[idx2]
+				n -= 1
+				continue
+
+			idx2 += 1
+		idx += 1
+	return approx
+
+
+
+def distance(pt1,pt2):
+	return sqrt((pt1[0]-pt2[0])**2 + (pt1[1] - pt2[1])**2 )
+
 
 def draw(in_im):
+	row,col = in_im.shape[:-1]
 	copy = in_im.copy()
 	canny = edge_detect(in_im)
-	cv2.GaussianBlur(canny,(5,5),True)
-	cv2.medianBlur(canny,3)
+	# cv2.GaussianBlur(canny,(15,15),True)
+	# cv2.medianBlur(canny,15)
 	# th2 = cv2.adaptiveThreshold(cv2.cvtColor(in_im,cv2.COLOR_BGR2GRAY),255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,11,2)
 	canny=cv2.dilate(canny, np.ones((7, 7), np.uint8), iterations=1)
 
@@ -41,11 +67,14 @@ def draw(in_im):
 	epsilon = 0.05*cv2.arcLength(cMax,True)
 	approx = cv2.approxPolyDP(cMax,epsilon,True).tolist()
 	approx.sort(key = lambda x : sqrt(x[0][0]**2 + x[0][1]**2))
+	# print("Points detected : " , len(approx))
+	deletepoints(approx,int(min(row,col)/10))
+	# print("After deletion, : ", len(approx))
 
 	x,y,w,h = cv2.boundingRect(cMax)
 	# cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	# print(approx)
+	print(approx)
 
 	for i in approx :
 		cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)
@@ -71,7 +100,7 @@ def draw(in_im):
 		cv2.drawContours(in_im, cMax, -1, (255, 0, 0), 1)
 		roi = copy
 
-	# ddcv2.imshow("Thresh",th2)
+	# cv2.imshow("Thresh",canny)
 	cv2.imshow("Input",in_im)
 	# cv2.waitKey(0)
 	return roi
