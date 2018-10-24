@@ -3,7 +3,6 @@ import cv2
 import pytesseract
 import vertical
 import rectangle
-import Cell_test
 
 def row_height(lines):
     avg_distance = 0
@@ -41,19 +40,21 @@ def create_row(img,horizontal_lines,vertical_lines):
             # roi = rectangle.thresh(roi)
             # print(pytesseract.image_to_string(roi))
         	# vertical.detect(roi)
-            # cv2.imshow("ROI",roi)
-            # cv2.waitKey(0)
+            cv2.imshow("ROI",roi)
+            cv2.waitKey(0)
 
-            print()
-            counter += 1
-            if counter > 3:
-                for idx,ver_line in enumerate(vertical_lines):
-                    if idx == len(vertical_lines)-1:
-                        break
-                    cells = roi[:,ver_line:vertical_lines[idx+1]]
-                    cv2.imwrite("temp_img.jpg",cells)
-                    # cv2.imshow("Cells",cells)
-                    # cv2.waitKey(0)
-                    Cell_test.printed_text("temp_img.jpg")
-                    # if cv2.waitKey(0) == ord('q'):
-                        # sys.exit(0)
+            for idx,ver_line in enumerate(vertical_lines):
+                if idx == len(vertical_lines)-1:
+                    break
+                cells = roi[:,ver_line:vertical_lines[idx+1]]
+                # cells = rectangle.thresh(roi)
+                # cells = cv2.resize(cells,None,fx=1,fy=1,interpolation = cv2.INTER_CUBIC)
+                # cells = rectangle.thresh(cv2.cvtColor(cells,cv2.COLOR_GRAY2BGR))
+                print(pytesseract.image_to_string(cells))
+                cv2.imshow("Cells",cells)
+                key_pressed = cv2.waitKey(0)
+                if key_pressed == ord('q'):
+                    sys.exit(0)
+                elif key_pressed == ord('s'):
+                    cv2.imwrite("tester"+str(counter)+".jpg",cells)
+                    counter += 1
