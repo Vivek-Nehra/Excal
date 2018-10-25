@@ -26,8 +26,8 @@ def nothing(x):
 
 def predict(img) :
     #print("here")
-    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    canny = cv2.Canny(gray,100,200)
+    #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    canny = cv2.Canny(img,100,200)
     img = cv2.resize(canny,(28,28),interpolation=cv2.INTER_AREA)
     #print(img)
     #img = cv2.Canny(img,100,200)
@@ -50,7 +50,7 @@ def predict(img) :
 
     #img = cv2.resize(img,(28,28))
     #cv2.imshow('sample',img)
-    cv2.waitKey(0)
+    # cv2.waitKey(0)
     """
 
     window1 = cv2.namedWindow('trackbar1',cv2.WINDOW_AUTOSIZE)
@@ -127,13 +127,14 @@ def predict(img) :
 
     predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)
     max_val = -1
-    print (predicted)
+    #print (predicted)
     for i in range(10):
         if (predicted[0][i]>max_val):
             max_val=predicted[0][i]
             ans = i
     
-    print (ans)
+    #print (ans)
+    return str(ans)
     #print (weights)
 
 #img = cv2.imread(input("Enter the name of image : "))

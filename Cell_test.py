@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import pytesseract
-
+import tm
 def printed_text(imging):
     # try:
     img = cv2.imread(imging)
@@ -24,7 +24,11 @@ def printed_text(imging):
 
     cv2.imshow("Image",copy)
     printed = pytesseract.image_to_string(img)
-    print(printed,end=' ')
+    #print(printed,end=' ')
+    if (len(printed)==0) :
+        return tm.predict(img)
+    else :
+        return printed
     counter = 0
     # if cv2.waitKey(0)==ord('w'):
         # cv2.imwrite("printed" + str(counter) + ".jpg",img)

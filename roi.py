@@ -1,9 +1,9 @@
 import sys
 import cv2
-#import pytesseract
+import pytesseract
 import vertical
 import rectangle
-#import Cell_test
+import Cell_test
 import tm
 def row_height(lines):
     avg_distance = 0
@@ -47,17 +47,20 @@ def create_row(img,horizontal_lines,vertical_lines):
             print()
             counter += 1
             if counter > 3:
+                print()
                 for idx,ver_line in enumerate(vertical_lines):
                     if idx == len(vertical_lines)-1:
                         break
                     cells = roi[:,ver_line:vertical_lines[idx+1]]
-                    cv2.imshow('cells',cells)
-                    if cv2.waitKey(0) == ord('n'):
-                        tm.predict(cells)
-                    cv2.destroyAllWindows()
-                    #cv2.imwrite("temp_img.jpg",cells)
+                    # cv2.imshow('cells',cells)
+                    # if cv2.waitKey(0) == ord('n'):
+                    #     tm.predict(cells)
+                    # cv2.waitKey(0)
+                    # cv2.destroyAllWindows()
+                    cv2.imwrite("temp_img.jpg",cells)
                     # cv2.imshow("Cells",cells)
                     # cv2.waitKey(0)
-                    #Cell_test.printed_text("temp_img.jpg")
+                    haha = Cell_test.printed_text("temp_img.jpg")
+                    print (haha,end=' ')
                     # if cv2.waitKey(0) == ord('q'):
                         # sys.exit(0)
