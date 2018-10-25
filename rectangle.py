@@ -68,13 +68,13 @@ def draw(in_im):
 	approx = cv2.approxPolyDP(cMax,epsilon,True).tolist()
 	approx.sort(key = lambda x : sqrt(x[0][0]**2 + x[0][1]**2))
 	# print("Points detected : " , len(approx))
-	deletepoints(approx,int(min(row,col)/10))
+	# deletepoints(approx,int(min(row,col)/10))
 	# print("After deletion, : ", len(approx))
 
 	x,y,w,h = cv2.boundingRect(cMax)
 	# cv2.rectangle(in_im,(x,y),(x+w,y+h),(0,0,255),2)
 
-	print(approx)
+	# print(approx)
 
 	for i in approx :
 		cv2.circle(in_im,(i[0][0],i[0][1]),5,(0,255,0),-1)

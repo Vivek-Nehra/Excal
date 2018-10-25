@@ -11,7 +11,7 @@ try:
     #cv2.imshow('img',img)
     small_img = rectangle.resize(img)
     #cv2.imshow('small_img',small_img)
-    
+
     rect_img = rectangle.draw(small_img)
     horizontal_lines = detectLines.detect(rect_img)
     vertical_lines = vertical.detect(rect_img)
@@ -20,9 +20,11 @@ try:
 
     cv2.imshow("Rectangle",rect_img)
     cv2.imshow("Original",img)
-    
+
 except AttributeError:
     print("Enter valid Image name")
 
+except NoneTypeError:
+    print("Error Occured .. Please Try Again")
 cv2.waitKey(0)
 cv2.destroyAllWindows()

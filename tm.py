@@ -24,22 +24,26 @@ def nothing(x):
 
 
 
-def predict(img) :
+def predict(img,model) :
     #print("here")
     #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    canny = cv2.Canny(img,100,200)
-    img = cv2.resize(canny,(28,28),interpolation=cv2.INTER_AREA)
+    copy = img.copy()
+    img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
+    img = cv2.Canny(img,100,200)
+    non_zero_cells = cv2.countNonZero(cv2.dilate(img.copy(),np.ones([3,3]),iterations=1))
+    digit_prob = non_zero_cells /784
     #print(img)
     #img = cv2.Canny(img,100,200)
     #print(img)
     # canny = cv2.dilate(canny,np.ones([3,3]),iterations=1)
-    # cv2.imshow('canny',canny)
+    # cv2.imshow('canny',img)
     # _, c, h = cv2.findContours(canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    # print("Contours length : " ,len(c))
     # cMax = max(c, key = cv2.contourArea)
     # cv2.drawContours(img,c,-1,(0,255,0,),3)
     # x,y,w,h = cv2.boundingRect(cMax)
     # cv2.rectangle(img,(x,x+h),(y,y+h),(0,0,255),2)
-    # cv2.imshow('l',img)
+    #cv2.imshow('l',img)
     # cv2.waitKey(0)
     # img = img[x:x+h,y:y+w]
     # cv2.imshow('s',img)
@@ -75,10 +79,10 @@ def predict(img) :
         val1 = cv2.getTrackbarPos('thresh1','trackbar1')
 
         #val2 = cv2.getTrackbarPos('thresh2','trackbar2')
-        
+
         #canny = cv2.Canny(img,val1,val2)
         _,thresh = cv2.threshold(img,val1,255,cv2.THRESH_BINARY_INV)
-        
+
         cv2.imshow('thresh',thresh)
         if (cv2.waitKey(1) == 27 ) :
             break
@@ -100,50 +104,52 @@ def predict(img) :
     #print (canny.shape)
     #canny = canny.reshape(1, 1, 28, 28).astype('float32')
     canny = canny.reshape(1,28*28).astype('float32')
-    canny = canny/255   
+    canny = canny/255
     #print(canny)
 
-    @@@ """ 
+    @@@ """
     """
     #_,thresh = cv2.threshold(img,196,255,cv2.THRESH_BINARY_INV)
-        
+
 
     rows,cols = thresh.shape
 
     print (thresh.shape)
     #canny = canny.reshape(1, 1, 28, 28).astype('float32')
     thresh = thresh.reshape(1,28*28).astype('float32')
-    thresh = thresh/255   
+    thresh = thresh/255
     print(thresh)
 
     """
-    img=img.reshape(1,1, 28, 28).astype('float32')
-    #img = img.reshape(1,28*28).astype('float32')
-    img = img/255   
+    if digit_prob < 0.4:
+        return ""
+    else:
+        img=img.reshape(1,1, 28, 28).astype('float32')
+        #img = img.reshape(1,28*28).astype('float32')
+        img = img/255
 
-    model = load_model('Without_Canny.h5')
-    #model = pickle.load(open("208epochs_weights_model_9.pkl","rb"))
-    #weights=model.get_weights()
+        #model = load_model('Without_Canny.h5')
+        #model = pickle.load(open("208epochs_weights_model_9.pkl","rb"))
+        #weights=model.get_weights()
 
-    predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)
-    max_val = -1
-    #print (predicted)
-    for i in range(10):
-        if (predicted[0][i]>max_val):
-            max_val=predicted[0][i]
-            ans = i
-    
-    #print (ans)
-    return str(ans)
-    #print (weights)
+        predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)
+        max_val = -1
+        #print (predicted)
+        for i in range(10):
+            if (predicted[0][i]>max_val):
+                max_val=predicted[0][i]
+                ans = i
 
-#img = cv2.imread(input("Enter the name of image : "))
+        #print (ans)
+        return str(ans)
+        #print (weights)
+
+    #img = cv2.imread(input("Enter the name of image : "))
 
 
-#predict(img)
+    #predict(img)
 
-"""
-for i in range(X_train.shape[0]):
-    predict(X_train[i])
-"""
-
+    """
+    for i in range(X_train.shape[0]):
+        predict(X_train[i])
+    """
