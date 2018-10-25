@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from rectangle import thresh
+import rectangle
 import math
 
 def deletelines(lines):
@@ -40,14 +40,15 @@ def slope(line):
 
 
 def detect(img):
-    canny = thresh(img)
+    canny = rectangle.thresh(img)
     sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
     row,col = sobel.shape
 
     sobel = cv2.erode(sobel,np.ones([1,int(col/10)]),iterations=1)
     sobel = cv2.dilate(sobel,np.ones([1,int(col/2)]),iterations=1)
-    _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
     sobel = np.array(sobel,dtype=np.uint8)
+    _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
+    # print(sobel)
     # print(sobel.shape,sobel.dtype)
 
     lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,col/2,30)
@@ -56,7 +57,7 @@ def detect(img):
     if lines is not None:
         lines = lines.tolist()
         lines.sort(key= lambda x : x[0][1])
-        print(len(lines))
+        # print(len(lines))
         lines = deletelines(lines)
 
         for line in lines:
@@ -67,9 +68,9 @@ def detect(img):
                 theta = slope(line)
             # print(theta)
             if theta < 10:
-                cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+                # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
                 val+=1
-        print(val)
+        # print(val)
 
 
         # cv2.imshow("Sobel",sobel)

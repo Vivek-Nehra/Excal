@@ -53,34 +53,34 @@ def detect(img):
     _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
     # print(canny.shape)
 
-    lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,int(0.5*row),30)
+    lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,int(0.4*row),30)
     # print("Initial lines : " , len(lines))
     # val = 0
     if lines is not None:
         lines = lines.tolist()
         lines.sort(key= lambda x : x[0][0])
-        print("Initial Lines : ",len(lines))
+        # print("Initial Lines : ",len(lines))
         lines = deletelines(lines)
-        print("After deletion : ",len(lines))
+        # print("After deletion : ",len(lines))
 
         for line in lines:
             # print(line)
-            cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+            # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
 
             if line[0][0] == line[0][2]:
                 theta = 90
             else :
                 theta = slope(line)
             # print(theta)
-            if theta > 80:
-                cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+            # if theta > 80:
+                # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
                 # val+=1
         # print(val)
 
-        cv2.imshow("Output",img)
+        # cv2.imshow("Output",img)
         # cv2.imshow("Sobel",sobel)
         # cv2.imshow("Canny",canny)
-        cv2.waitKey(0)
+        # cv2.waitKey(0)
 
         vertical_lines = [x[0][0] for x in lines]
         # print(vertical_lines)
