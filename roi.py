@@ -67,14 +67,14 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
                     # if cv2.waitKey(0) == ord('q'):
                         # sys.exit(0)
 
-                # Create Output Files
+    # Create Output Files
                 output.append(row)
-                df = pd.DataFrame(output)
-                # print(df)
-                df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '?')
+    df = pd.DataFrame(output)
+    # print(df)
+    df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '?')
 
-                df_new = pd.read_csv("Output/Output.csv",sep=' ')
-                writer = pd.ExcelWriter("Output/Result.xlsx")
-                df_new.to_excel(writer,index=False)
-                writer.save()
-                print("Output Generated")
+    df_new = pd.read_csv("Output/Output.csv",sep=' ')
+    writer = pd.ExcelWriter("Output/Result.xlsx")
+    df_new.to_excel(writer,index=False)
+    writer.save()
+    print("Output Generated")
