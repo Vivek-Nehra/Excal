@@ -25,33 +25,30 @@ df = df.drop('A',1)
 dataset =  df.values
 X = dataset[:,0:dataset.shape[1]]
 x_train,x_test,y_train,y_test = train_test_split(X,Y,test_size=0.2)
-print (x_train.shape)
-#
-# X_train = numpy.concatenate((X_train,X_test))
-# y_train = numpy.concatenate((y_train,y_test))
 
-#print (X_train.shape)
 X_train=[]
 X_test=[]
+
 for i in range(0,x_train.shape[0]):
-    #X_train[i]=X_train[i].reshape(28,28)
-    #print(X_train[i])
-    #cv2.imshow("Train",X_train[i])
-    #cv2.waitKey(0)
     X_train.append(x_train[i].reshape(28,28))
-    #print(X_train[i])
+
 for i in range(0,10000):
     X_test.append(x_test[i].reshape(28,28))
+
+
 X_train=numpy.array(X_train)
 X_test =numpy.array(X_test)
-print (X_train.shape,y_train.shape)
+#print (X_train.shape,y_train.shape)
 y_train=y_train.reshape(y_train.shape[0])
 y_test=y_test.reshape(y_test.shape[0])
 print(y_train)
+
 # reshape to be [samples][pixels][width][height]
 X_train = X_train.reshape(X_train.shape[0], 1, 28, 28).astype('float32')
 X_test = X_test.reshape(X_test.shape[0], 1, 28, 28).astype('float32')
 print (X_train.shape)
+
+
 # normalize inputs from 0-255 to 0-1
 X_train = X_train / 255
 X_test = X_test / 255
@@ -60,6 +57,7 @@ y_train = np_utils.to_categorical(y_train)
 y_test = np_utils.to_categorical(y_test)
 num_classes = y_test.shape[1]
 print (y_train.shape,num_classes)
+
 # define the larger model
 def larger_model():
 	# create model
@@ -76,13 +74,15 @@ def larger_model():
 	# Compile model
 	model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 	return model
+
 # build the model
 model = larger_model()
+
 # Fit the model
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=10, batch_size=200)
+
 # Final evaluation of the model
 scores = model.evaluate(X_test, y_test, verbose=0)
 print("Large CNN Error: %.2f%%" % (100-scores[1]*100))
 
 model.save('2.h5')
-

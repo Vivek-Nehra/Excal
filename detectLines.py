@@ -3,7 +3,7 @@ import numpy as np
 import rectangle
 import math
 
-def deletelines(lines):
+def deletelines(lines):         # Delete clustered lines -- Horizontal
     n = len(lines)
     idx= 0
     while idx < n:
@@ -32,33 +32,33 @@ def deletelines(lines):
     return lines
 
 
-def slope(line):
+def slope(line):            # Find Slope of line
     if line[0][0] == line[0][2]:
         return 90
     return math.degrees(math.atan(abs(line[0][1] - line[0][3])/abs(line[0][0] - line[0][2])))
 
 
 
-def detect(img):
-    canny = rectangle.thresh(img)
-    sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)
+def detect(img):            #Horizontal Lines Detection
+    canny = rectangle.thresh(img)       # Thresh image
+    sobel = cv2.Sobel(canny,cv2.CV_64F,0,1,ksize=5)     # Sobel Filtering
     row,col = sobel.shape
 
+    # Morphological Operations
     sobel = cv2.erode(sobel,np.ones([1,int(col/10)]),iterations=1)
     sobel = cv2.dilate(sobel,np.ones([1,int(col/2)]),iterations=1)
     sobel = np.array(sobel,dtype=np.uint8)
     _,sobel = cv2.threshold(sobel,200,255,cv2.THRESH_BINARY)
-    # print(sobel)
-    # print(sobel.shape,sobel.dtype)
 
+    # Detect Lines
     lines = cv2.HoughLinesP(sobel,1,np.pi/180,150,None,col/2,30)
-    # print("Initial lines : " , len(lines))
+
     val = 0
-    if lines is not None:
+    if lines is not None:       # Condition Check
         lines = lines.tolist()
         lines.sort(key= lambda x : x[0][1])
         # print(len(lines))
-        lines = deletelines(lines)
+        lines = deletelines(lines)      # Delete clustered lines
 
         for line in lines:
 
@@ -66,11 +66,10 @@ def detect(img):
                 theta = 90
             else :
                 theta = slope(line)
-            # print(theta)
-            if theta < 10:
+
+            if theta < 10:      # Condition Check
                 # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
                 val+=1
-        # print(val)
 
 
         # cv2.imshow("Sobel",sobel)
