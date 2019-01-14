@@ -90,7 +90,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
                 output.append(row)
 
 
-    for i in range(1,max_col_count-2):
+    for i in range(1,max_col_count-1):
         header[0].extend([i])
 
     header[0].extend(["Total Attendance"])
@@ -114,7 +114,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     # print(header)
     df = pd.DataFrame(header)
     # print(df)
-    df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '0')
+    df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '')
 
     df_new = pd.read_csv("Output/Output.csv",sep=' ')
     writer = pd.ExcelWriter("Output/Result.xlsx")
