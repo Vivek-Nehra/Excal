@@ -22,11 +22,20 @@ def predict(img,model) :
     # img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
     img = cv2.GaussianBlur(img,(5,5),True)
     img = cv2.Canny(img,100,200)
-    _, c, h = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    dilate = cv2.dilate(img,(3,3),iterations = 1)
+
+
+    # print("Before")
+    # cv2.imshow("Empty",img)
+    # cv2.waitKey(0)
+    
+
+    _, c, h = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if len(c) > 0:
         cMax = max(c, key = cv2.contourArea)
         x,y,w,h = cv2.boundingRect(cMax)        # Find the Bounding Rectangle
         img = img[y:y+h,x:x+w] 
+
 
         top , bottom , left , right = 0,0,0,0
         small_row,small_col = img.shape
@@ -42,12 +51,14 @@ def predict(img,model) :
         img = cv2.copyMakeBorder(img,top,bottom,left,right,cv2.BORDER_CONSTANT,value = [0,0,0])
 
         if small_row > 28 or small_col > 28:
+            # print(img.shape)
             img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
+            # img = cv2.Canny(img,100,200)
 
-        # print(img.shape)
 
-        cv2.imshow("Empty",img)
-        cv2.waitKey(0)
+        # print("After")
+        # cv2.imshow("Empty",img)
+        # cv2.waitKey(0)
 
 
 
@@ -69,12 +80,12 @@ def predict(img,model) :
 
         predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)            # Predict
         max_val = -1
-        print (predicted)
-        
+        # print (predicted)
+
         for i in range(2):
             if (predicted[0][i]>max_val):
                 max_val=predicted[0][i]
                 ans = i
 
-        print (ans)
+        # print (ans)
         return str(ans)

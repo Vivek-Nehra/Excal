@@ -32,7 +32,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     counter = 0
     model = load_model('Classifier/PA.h5')         # Load Model
     output=[]
-    header = [["Roll No","Name ", "Lectures"]]
+    header = [["Roll No","Name "]]
     max_col_count = 0
     TA = []
     for index,line in enumerate(horizontal_lines) :
@@ -50,7 +50,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
             # cv2.waitKey(0)
 
             counter += 1
-            if counter > 3:
+            if counter > 2:
                 # print()
                 row = []
                 cnt = 0
@@ -72,6 +72,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
                     # print (text,end=' ')
                     if text != "":
                         col_count += 1
+                        row.append(text)
 
                        
                     if text == '1':
@@ -79,7 +80,6 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
 
                     # if cv2.waitKey(0) == ord('q'):
                         # sys.exit(0)
-                    row.append(text)
 
                 if max_col_count < col_count:
                     max_col_count = col_count
