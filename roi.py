@@ -50,7 +50,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
             # cv2.waitKey(0)
 
             counter += 1
-            if counter > 2:
+            if counter > 3:
                 # print()
                 row = []
                 cnt = 0
