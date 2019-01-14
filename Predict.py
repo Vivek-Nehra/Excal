@@ -19,12 +19,45 @@ def nothing(x):
 
 def predict(img,model) :
     #gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
+    # img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
+    img = cv2.GaussianBlur(img,(5,5),True)
     img = cv2.Canny(img,100,200)
+    _, c, h = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    if len(c) > 0:
+        cMax = max(c, key = cv2.contourArea)
+        x,y,w,h = cv2.boundingRect(cMax)        # Find the Bounding Rectangle
+        img = img[y:y+h,x:x+w] 
+
+        top , bottom , left , right = 0,0,0,0
+        small_row,small_col = img.shape
+        
+        if small_row < 28:
+            top = int((28-small_row)/2)
+            bottom = 28 - top - small_row
+
+        if small_col < 28:
+            left = int((28-small_col)/2)
+            right = 28 - left - small_col
+
+        img = cv2.copyMakeBorder(img,top,bottom,left,right,cv2.BORDER_CONSTANT,value = [0,0,0])
+
+        if small_row > 28 or small_col > 28:
+            img = cv2.resize(img,(28,28),interpolation=cv2.INTER_AREA)
+
+        # print(img.shape)
+
+        cv2.imshow("Empty",img)
+        cv2.waitKey(0)
+
+
+
     non_zero_cells = cv2.countNonZero(cv2.dilate(img.copy(),np.ones([3,3]),iterations=1))
     digit_prob = non_zero_cells /784            # Remove Empty Cells
 
-    if digit_prob < 0.4:
+    if digit_prob < 0.35:
+        # cv2.imshow("Empty",img)
+        # print(digit_prob)
+        # cv2.waitKey(0)
         return ""       # Cell is empty
     else:
         img=img.reshape(1,1, 28, 28).astype('float32')      # Cell is not empty
@@ -36,11 +69,12 @@ def predict(img,model) :
 
         predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)            # Predict
         max_val = -1
-        #print (predicted)
+        print (predicted)
+        
         for i in range(2):
             if (predicted[0][i]>max_val):
                 max_val=predicted[0][i]
                 ans = i
 
-        #print (ans)
+        print (ans)
         return str(ans)

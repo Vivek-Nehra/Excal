@@ -57,6 +57,7 @@ def distance(pt1,pt2):	# Find distance between 2 points
 
 def draw(in_im):
 	row,col = in_im.shape[:-1]
+	copy = in_im.copy()
 	canny = edge_detect(in_im)
 	canny=cv2.dilate(canny, np.ones((7, 7), np.uint8), iterations=1)
 

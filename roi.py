@@ -30,9 +30,9 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     print("Row Height : " ,row_size)
     row,col = img.shape[:-1]
     counter = 0
-    model = load_model('Classifier/2.h5')         # Load Model
+    model = load_model('Classifier/PA.h5')         # Load Model
     output=[]
-    header = [["Roll No","Name ", "Lectures: "]]
+    header = [["Roll No","Name ", "Lectures"]]
     max_col_count = 0
     TA = []
     for index,line in enumerate(horizontal_lines) :
@@ -72,13 +72,14 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
                     # print (text,end=' ')
                     if text != "":
                         col_count += 1
+
                        
                     if text == '1':
                         current_attendance += 1
 
-                    row.append(text)
                     # if cv2.waitKey(0) == ord('q'):
                         # sys.exit(0)
+                    row.append(text)
 
                 if max_col_count < col_count:
                     max_col_count = col_count
@@ -104,6 +105,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
         output[i].append(TA[i][0])
     
 
+
     header.extend(output)
 
 
@@ -112,7 +114,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     # print(header)
     df = pd.DataFrame(header)
     # print(df)
-    df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '?')
+    df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '0')
 
     df_new = pd.read_csv("Output/Output.csv",sep=' ')
     writer = pd.ExcelWriter("Output/Result.xlsx")
