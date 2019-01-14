@@ -37,7 +37,7 @@ def predict(img,model) :
         predicted = model.predict(img,batch_size = 200,verbose = 2,steps = None)            # Predict
         max_val = -1
         #print (predicted)
-        for i in range(10):
+        for i in range(2):
             if (predicted[0][i]>max_val):
                 max_val=predicted[0][i]
                 ans = i

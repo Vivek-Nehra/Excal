@@ -30,8 +30,5 @@ try:
 except AttributeError:
     print("Enter valid Image name")
 
-except NoneTypeError:
-    print("Error Occured .. Please Try Again")
-
 #cv2.waitKey(0)
 cv2.destroyAllWindows()

@@ -30,10 +30,13 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     print("Row Height : " ,row_size)
     row,col = img.shape[:-1]
     counter = 0
-    model = load_model('Classifier/With_Canny.h5')         # Load Model
+    model = load_model('Classifier/2.h5')         # Load Model
     output=[]
-    output.append(["Roll No","Name ", "Lectures: ","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"])
+    header = [["Roll No","Name ", "Lectures: "]]
+    max_col_count = 0
+    TA = []
     for index,line in enumerate(horizontal_lines) :
+        col_count = 0
         if index == len(horizontal_lines)-1:
             # roi = img[line[0][1]:row,:,:]
             break
@@ -51,25 +54,63 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
                 # print()
                 row = []
                 cnt = 0
+
+
+                current_attendance = 0
                 for idx,ver_line in enumerate(vertical_lines):
                     if idx == len(vertical_lines)-1:
                         break
                     if cnt == 0:
                         cnt += 1
                         continue
+
                     cells = roi[:,ver_line:vertical_lines[idx+1]]           # Detect Cells in each row
                     cv2.imwrite("temp_img.jpg",cells)
                     # cv2.imshow("Cells",cells)
                     # cv2.waitKey(0)
                     text = Cell_test.printed_text("temp_img.jpg",model)     # Get text in the cells
                     # print (text,end=' ')
+                    if text != "":
+                        col_count += 1
+                       
+                    if text == '1':
+                        current_attendance += 1
+
                     row.append(text)
                     # if cv2.waitKey(0) == ord('q'):
                         # sys.exit(0)
 
+                if max_col_count < col_count:
+                    max_col_count = col_count
+
+                TA.append([current_attendance])
+
     # Create Output Files
                 output.append(row)
-    df = pd.DataFrame(output)
+
+
+    for i in range(1,max_col_count-2):
+        header[0].extend([i])
+
+    header[0].extend(["Total Attendance"])
+    print(max_col_count)
+
+    for i in range(len(TA)):
+        TA[i][0] = str(round(TA[i][0]/(max_col_count-2) * 100,2))
+        TA[i][0] += "%"
+
+
+    for i in range(len(output)):
+        output[i].append(TA[i][0])
+    
+
+    header.extend(output)
+
+
+
+
+    # print(header)
+    df = pd.DataFrame(header)
     # print(df)
     df.to_csv("Output/Output.csv",sep=' ',encoding='utf_8',header=False,index=False,na_rep = '?')
 
