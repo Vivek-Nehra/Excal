@@ -16,7 +16,8 @@ def printed_text(imging,model):     # Recognise Printed Text
 
     # img = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY,9,2)
     # img = cv2.erode(img,np.ones([3,3]),iterations= 1)
-    #cv2.imshow("Image",copy)
+    # cv2.imshow("Image",copy)
+    # cv2.waitKey(0)
 
     printed = pytesseract.image_to_string(img)
     if (len(printed)==0) :

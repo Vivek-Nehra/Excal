@@ -21,7 +21,7 @@ def deletelines(lines):         # Delete Vertical Lines
                 idx2 += 1
                 continue
 
-            if abs(lines[idx][0][0] - lines[idx2][0][0]) < 20 :
+            if abs(lines[idx][0][0] - lines[idx2][0][0]) < 20 or abs(lines[idx][0][0] - lines[idx2][0][2]) < 20 or abs(lines[idx][0][2] - lines[idx2][0][0]) < 20 or abs(lines[idx][0][2] - lines[idx2][0][2]) < 20    :
                 # print ("Deleted")
                 del lines[idx2]
                 n -= 1
@@ -66,10 +66,13 @@ def detect(img):            # Detect Vertical Lines
         # print("After deletion : ",len(lines))
 
         for line in lines:
+            # cv2.line(img,(line[0][0],line[0][1]),(line[0][2],line[0][3]),(0,255,0),2)
+
             if line[0][0] == line[0][2]:
                 theta = 90
             else :
                 theta = slope(line)
+
 
         # cv2.imshow("Output",img)
         # cv2.imshow("Sobel",sobel)
