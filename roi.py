@@ -94,17 +94,22 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
         header[0].extend([i])
 
     header[0].extend(["Total Attendance"])
-    print(max_col_count)
+    print("Total Columns : " ,max_col_count)
 
     for i in range(len(TA)):
         TA[i][0] = str(round(TA[i][0]/(max_col_count-2) * 100,2))
         TA[i][0] += "%"
 
+    for i in range(len(output)):
+        cur_len = len(output[i])
+        if cur_len != max_col_count:
+            for j in range(max_col_count-cur_len):
+                output[i].append('A')
+
 
     for i in range(len(output)):
         output[i].append(TA[i][0])
     
-
 
     header.extend(output)
 
