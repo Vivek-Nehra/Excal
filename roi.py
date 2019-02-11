@@ -30,7 +30,7 @@ def create_row(img,horizontal_lines,vertical_lines):        # Create Cells
     print("Row Height : " ,row_size)
     row,col = img.shape[:-1]
     counter = 0
-    model = load_model('Classifier/0-1.h5')         # Load Model
+    model = load_model('Classifier/PA.h5')         # Load Model
     output=[]
     header = [["Roll No","Name "]]
     max_col_count = 0
